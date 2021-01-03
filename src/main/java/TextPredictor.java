@@ -82,11 +82,9 @@ public class TextPredictor {
 
     private double updateLeft(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
+        double max = val[0];
         for (int l = 0; l < C.length; l++) {
             val[l] = dir[i][j-1][l] + 0.5*q[i][j-1][l] - phi[i][j-1][l] + g[l][k];
-        }
-        double max = val[0];
-        for (int l = 0; l < val.length; l++) {
             if (val[l] > max) {
                 max = val[l];
             }
@@ -96,11 +94,9 @@ public class TextPredictor {
 
     private double updateUp(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
+        double max = val[0];
         for (int l = 0; l < C.length; l++) {
             val[l] = dir[i-1][j][l] + 0.5*q[i-1][j][l] + phi[i-1][j][l] + g[l][k];
-        }
-        double max = val[0];
-        for (int l = 0; l < val.length; l++) {
             if (val[l] > max) {
                 max = val[l];
             }
@@ -110,11 +106,9 @@ public class TextPredictor {
 
     private double updateRight(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
+        double max = val[0];
         for (int l = 0; l < C.length; l++) {
             val[l] = dir[i][j+1][l] + 0.5*q[i][j+1][l] - phi[i][j+1][l] + g[l][k];
-        }
-        double max = val[0];
-        for (int l = 0; l < val.length; l++) {
             if (val[l] > max) {
                 max = val[l];
             }
@@ -124,15 +118,13 @@ public class TextPredictor {
 
     private double restoreK(int i, int j, double[] C){
         double[] val = new double[C.length];
-        for (int k = 0; k < C.length; k++) {
-            val[k] = L[i][j][k] + R[i][j][k] + q[i][j][k] - phi[i][j][k];
-        }
         double max = val[0];
         int maxIndex = 0;
-        for (int l = 0; l < val.length; l++) {
-            if (val[l] > max) {
-                max = val[l];
-                maxIndex = l;
+        for (int k = 0; k < C.length; k++) {
+            val[k] = L[i][j][k] + R[i][j][k] + q[i][j][k] - phi[i][j][k];
+            if (val[k] > max) {
+                max = val[k];
+                maxIndex = k;
             }
         }
         return C[maxIndex];
@@ -142,11 +134,9 @@ public class TextPredictor {
 
     private double updateDown(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
+        double max = val[0];
         for (int l = 0; l < C.length; l++) {
             val[l] = dir[i+1][j][l] + 0.5*q[i+1][j][l] + phi[i+1][j][l] + g[l][k];
-        }
-        double max = val[0];
-        for (int l = 0; l < val.length; l++) {
             if (val[l] > max) {
                 max = val[l];
             }
