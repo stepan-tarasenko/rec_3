@@ -43,7 +43,7 @@ public class TextPredictor {
                     for (int k = 0; k < C.length; k++) {
                         L[i][j][k] = updateLeft(i, j, k, L, phi, C);
                         U[i][j][k] = updateUp(i, j, k, U, phi, C);
-                        phi[i][j][k] = (L[i][j][k] + U[i][j][k] - R[i][j][k] - D[i][j][k])/2;
+                        phi[i][j][k] = (L[i][j][k] - U[i][j][k] + R[i][j][k] - D[i][j][k])/2;
                     }
                 }
             }
@@ -52,7 +52,7 @@ public class TextPredictor {
                     for (int c = 0; c < C.length; c++) {
                         R[i][j][c] = updateRight(i, j, c, R, phi, C);
                         D[i][j][c] = updateDown(i, j, c, D, phi, C);
-                        phi[i][j][c] = (L[i][j][c] + U[i][j][c] - R[i][j][c] - D[i][j][c])/2;
+                        phi[i][j][c] = (L[i][j][c] - U[i][j][c] + R[i][j][c] - D[i][j][c])/2;
                     }
                 }
             }
@@ -97,7 +97,7 @@ public class TextPredictor {
     private double updateUp(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
         for (int l = 0; l < C.length; l++) {
-            val[l] = dir[i-1][j][l] + 0.5*q[i-1][j][l] - phi[i-1][j][l] + g[l][k];
+            val[l] = dir[i-1][j][l] + 0.5*q[i-1][j][l] + phi[i-1][j][l] + g[l][k];
         }
         double max = val[0];
         for (int l = 0; l < val.length; l++) {
@@ -111,7 +111,7 @@ public class TextPredictor {
     private double updateRight(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
         for (int l = 0; l < C.length; l++) {
-            val[l] = dir[i][j+1][l] + 0.5*q[i][j+1][l] + phi[i][j+1][l] + g[l][k];
+            val[l] = dir[i][j+1][l] + 0.5*q[i][j+1][l] - phi[i][j+1][l] + g[l][k];
         }
         double max = val[0];
         for (int l = 0; l < val.length; l++) {
