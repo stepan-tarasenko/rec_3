@@ -82,7 +82,7 @@ public class TextPredictor {
 
     private double updateLeft(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
-        double max = val[0];
+        double max = -Double.MAX_VALUE;
         for (int l = 0; l < C.length; l++) {
             val[l] = dir[i][j-1][l] + 0.5*q[i][j-1][l] - phi[i][j-1][l] + g[l][k];
             if (val[l] > max) {
@@ -94,7 +94,7 @@ public class TextPredictor {
 
     private double updateUp(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
-        double max = val[0];
+        double max = -Double.MAX_VALUE;
         for (int l = 0; l < C.length; l++) {
             val[l] = dir[i-1][j][l] + 0.5*q[i-1][j][l] + phi[i-1][j][l] + g[l][k];
             if (val[l] > max) {
@@ -106,7 +106,7 @@ public class TextPredictor {
 
     private double updateRight(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
-        double max = val[0];
+        double max = -Double.MAX_VALUE;
         for (int l = 0; l < C.length; l++) {
             val[l] = dir[i][j+1][l] + 0.5*q[i][j+1][l] - phi[i][j+1][l] + g[l][k];
             if (val[l] > max) {
@@ -118,7 +118,7 @@ public class TextPredictor {
 
     private double restoreK(int i, int j, double[] C){
         double[] val = new double[C.length];
-        double max = val[0];
+        double max = -Double.MAX_VALUE;
         int maxIndex = 0;
         for (int k = 0; k < C.length; k++) {
             val[k] = L[i][j][k] + R[i][j][k] + q[i][j][k] - phi[i][j][k];
@@ -134,7 +134,7 @@ public class TextPredictor {
 
     private double updateDown(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
         double[] val = new double[C.length];
-        double max = val[0];
+        double max = -Double.MAX_VALUE;
         for (int l = 0; l < C.length; l++) {
             val[l] = dir[i+1][j][l] + 0.5*q[i+1][j][l] + phi[i+1][j][l] + g[l][k];
             if (val[l] > max) {
