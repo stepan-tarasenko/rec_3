@@ -22,18 +22,32 @@ public class TextPredictor {
 
 
 
-    public void main() throws IOException, URISyntaxException {
+    public void main(String[] args) throws IOException, URISyntaxException {
+        processArgs(args);
         inputPicture = Utils.readPictureAsArray("lisa.png");
         initArrays();
         run();
+    }
+
+    private void processArgs(String[] args) {
+        if (args != null) {
+            List<Double> inp = new ArrayList<>();
+            for (String s : args) {
+                inp.add(Double.parseDouble(s));
+            }
+            C = new double[inp.size()];
+            for (int i = 0; i < inp.size(); i++) {
+                C[i] = inp.get(i);
+            }
+        }
     }
 
     private void run() {
         for (int i = inputPicture.length - 2; i >= 0; i--) {
             for (int j = inputPicture[0].length - 2; j >= 0; j--) {
                 for (int c = 0; c < C.length; c++) {
-                    R[i][j][c] = updateRight(i, j, c, R, phi, C);
-                    D[i][j][c] = updateDown(i, j, c, D, phi, C);
+                    R[i][j][c] = updateRight(i, j, c, R, phi, C, q, g);
+                    D[i][j][c] = updateDown(i, j, c, D, phi, C, q, g);
                 }
             }
         }
@@ -41,8 +55,8 @@ public class TextPredictor {
             for (int i = 1; i < inputPicture.length; i++) {
                 for (int j = 1; j < inputPicture[0].length; j++) {
                     for (int k = 0; k < C.length; k++) {
-                        L[i][j][k] = updateLeft(i, j, k, L, phi, C);
-                        U[i][j][k] = updateUp(i, j, k, U, phi, C);
+                        L[i][j][k] = updateLeft(i, j, k, L, phi, C, q, g);
+                        U[i][j][k] = updateUp(i, j, k, U, phi, C, q, g);
                         phi[i][j][k] = (L[i][j][k] - U[i][j][k] + R[i][j][k] - D[i][j][k])/2;
                     }
                 }
@@ -50,8 +64,8 @@ public class TextPredictor {
             for (int i = inputPicture.length - 2; i >= 0; i--) {
                 for (int j = inputPicture[0].length - 2; j >= 0; j--) {
                     for (int c = 0; c < C.length; c++) {
-                        R[i][j][c] = updateRight(i, j, c, R, phi, C);
-                        D[i][j][c] = updateDown(i, j, c, D, phi, C);
+                        R[i][j][c] = updateRight(i, j, c, R, phi, C, q, g);
+                        D[i][j][c] = updateDown(i, j, c, D, phi, C, q, g);
                         phi[i][j][c] = (L[i][j][c] - U[i][j][c] + R[i][j][c] - D[i][j][c])/2;
                     }
                 }
@@ -80,7 +94,8 @@ public class TextPredictor {
         }
     }
 
-    private double updateLeft(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
+    public double updateLeft(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C,
+                             double[][][] q, double[][] g) {
         double[] val = new double[C.length];
         double max = -Double.MAX_VALUE;
         for (int l = 0; l < C.length; l++) {
@@ -92,7 +107,8 @@ public class TextPredictor {
         return max;
     }
 
-    private double updateUp(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
+    public double updateUp(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C,
+                           double[][][] q, double[][] g) {
         double[] val = new double[C.length];
         double max = -Double.MAX_VALUE;
         for (int l = 0; l < C.length; l++) {
@@ -104,7 +120,8 @@ public class TextPredictor {
         return max;
     }
 
-    private double updateRight(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
+    public double updateRight(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C,
+                              double[][][] q, double[][] g) {
         double[] val = new double[C.length];
         double max = -Double.MAX_VALUE;
         for (int l = 0; l < C.length; l++) {
@@ -116,7 +133,7 @@ public class TextPredictor {
         return max;
     }
 
-    private double restoreK(int i, int j, double[] C){
+    public double restoreK(int i, int j, double[] C){
         double[] val = new double[C.length];
         double max = -Double.MAX_VALUE;
         int maxIndex = 0;
@@ -130,9 +147,8 @@ public class TextPredictor {
         return C[maxIndex];
     }
 
-
-
-    private double updateDown(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C) {
+    public double updateDown(int i, int j, int k, double[][][] dir, double[][][] phi, double[] C,
+                             double[][][] q, double[][] g) {
         double[] val = new double[C.length];
         double max = -Double.MAX_VALUE;
         for (int l = 0; l < C.length; l++) {
